@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 app = Flask(__name__)
+# added to test nginx LB from 2nd challenge
 pod_name = os.environ.get('HOSTNAME', 'unknown')
 
 @app.route("/")
