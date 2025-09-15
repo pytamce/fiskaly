@@ -1,4 +1,4 @@
-# Terraform Infrastructure — AWS EKS Cluster for Hello World App
+# 🏗️ Terraform Infrastructure — AWS EKS Cluster for Hello World App
 
 This repository demonstrates a **Terraform-based infrastructure setup** for deploying a minimal Kubernetes environment suitable for the Hello World application.
 The Terraform configuration provisions:
