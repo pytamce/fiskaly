@@ -13,13 +13,13 @@ The Terraform configuration provisions:
 ## Files
 
 ```
-terraform/
-├─ providers.tf    # Provider configuration
-├─ variables.tf    # Input variables for customization
-├─ outputs.tf      # Outputs like kubeconfig
-├─ network.tf      # VPC, subnets, route tables, IGW
-├─ security.tf     # Security groups for nodes and LB
-└─ cluster.tf      # EKS cluster and node groups
+README.md
+providers.tf    # Provider configuration
+variables.tf    # Input variables for customization
+outputs.tf      # Outputs like kubeconfig
+network.tf      # VPC, subnets, route tables, IGW
+security.tf     # Security groups for nodes and LB      
+cluster.tf      # EKS cluster and node groups (roles/polic)
 ```
 
 ---
