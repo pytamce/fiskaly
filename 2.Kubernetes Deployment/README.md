@@ -47,3 +47,16 @@ hpa.yaml                    # horizontal autoscaller
 * **Min replicas:** 2.
 * **Max replicas:** 4.
 * **Metric:** CPU utilization 70%.
+
+### Test on minikube
+```bash
+minikube start --driver=docker
+minikube addons enable metrics-server
+kubectl create -f .
+minikube service nginx-lb-service
+kubectl run -i --tty load-generator --image=busybox /bin/sh
+while true; do wget -q -O- http://hello-service:8080/; done
+kubectl get hpa -w
+http://localhost:8080/
+```
+
