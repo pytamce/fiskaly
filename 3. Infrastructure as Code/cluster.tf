@@ -33,7 +33,12 @@ resource "aws_eks_cluster" "demo-eks-cluster" {
     vpc_config {
     endpoint_private_access = true
     endpoint_public_access = true
-    subnet_ids =concat(aws_subnet.public[*].id, aws_subnet.private[*].id)
+    subnet_ids = [
+        aws_subnet.private-subnet-1.id,
+        aws_subnet.private-subnet-2.id,
+        aws_subnet.public-subnet-1.id,
+        aws_subnet.public-subnet-2.id
+    ]
     public_access_cidrs    = ["${chomp(data.http.my_ip.response_body)}/32"]
     }
     access_config {
