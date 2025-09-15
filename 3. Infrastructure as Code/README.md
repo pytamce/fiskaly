@@ -3,10 +3,14 @@
 This repository demonstrates a **Terraform-based infrastructure setup** for deploying a minimal Kubernetes environment suitable for the Hello World application.
 The Terraform configuration provisions:
 
-* **VPC** with public and private subnets
-* **EKS cluster** with 4 worker nodes
-* **Security groups** for proper network segmentation
-* **Outputs** for easy access to the cluster
+
+---
+
+## Task
+A simple, startup infrastructure configuration as a code for a cloud of choice launching the following:
+* VPC with subnets.
+* A small, 4 nodes Kubernetes cluster that would be able to accommodate the kubernetes deployment prepared in previous exercise.
+* Provide the proper network security configuration allowing only necessary traffic to our service.
 
 ---
 
