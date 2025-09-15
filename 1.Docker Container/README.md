@@ -1,4 +1,4 @@
-# Docker Container — Hello world
+# 🐳 Docker Container — Hello world
 
 This repository contains a minimal example that builds a small web application container image which responds **"Hello world"** to HTTP requests on **port 8080**.
 
