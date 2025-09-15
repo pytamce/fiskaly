@@ -6,16 +6,17 @@ This repository demonstrates a **simple Kubernetes deployment** of a web with **
 ---
 
 ## Files
+
 ```
 README.md
-k8s/
-  ├─ hello-app-deployment.yaml
-  ├─ hello-service.yaml
-  ├─ nginx-conf-configmap.yaml
-  ├─ nginx-deployment.yaml
-  ├─ nginx-service.yaml
-  └─ hpa.yaml
+hello-app-deployment.yaml   # hello app application
+hello-service.yaml          # hello app service
+nginx-conf-configmap.yaml   # config map to use nginx as a load balancer
+nginx-deployment.yaml       # nginx deployment for LB
+nginx-service.yaml          # nginx service for LB       
+hpa.yaml                    # horizontal autoscaller
 ```
+
 
 ---
 
