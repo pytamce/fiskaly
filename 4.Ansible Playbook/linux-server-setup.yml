@@ -1,0 +1,63 @@
+---
+- name: Manage Linux servers (Ubuntu & RedHat)
+  hosts: all
+  become: true
+  gather_facts: yes
+
+  vars:
+    apache_ubuntu_package: apache2
+    mariadb_redhat_package: mariadb-server
+    hello_world_content: "<html><body><h1>Hello world</h1></body></html>"
+
+  tasks:
+
+    - name: Update package repositories
+      ansible.builtin.package:
+        name: "*"
+        state: latest
+      when: ansible_os_family in ['Debian', 'RedHat']
+      register: update_result
+      ignore_errors: yes
+
+    - name: Upgrade all packages
+      ansible.builtin.package:
+        upgrade: yes
+      when: ansible_os_family in ['Debian', 'RedHat']
+
+    # Ubuntu
+    - name: Ensure Apache is installed on Ubuntu
+      ansible.builtin.package:
+        name: "{{ apache_ubuntu_package }}"
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Create simple Apache HTML page (Hello world) on Ubuntu
+      ansible.builtin.copy:
+        dest: /var/www/html/index.html
+        content: "{{ hello_world_content }}"
+        owner: www-data
+        group: www-data
+        mode: '0644'
+      when: ansible_os_family == "Debian" and
+            "'apache2' in ansible_facts.packages"
+
+    - name: Ensure Apache is restarted/reloaded after config change
+      ansible.builtin.service:
+        name: "{{ apache_ubuntu_package }}"
+        state: restarted
+      when: ansible_os_family == "Debian" and
+            "'apache2' in ansible_facts.packages"
+
+    # RedHat
+    - name: Ensure MariaDB is installed on RedHat
+      ansible.builtin.package:
+        name: "{{ mariadb_redhat_package }}"
+        state: present
+      when: ansible_os_family == "RedHat"
+
+    - name: Ensure MariaDB service is started and enabled
+      ansible.builtin.service:
+        name: "{{ mariadb_redhat_package }}"
+        state: started
+        enabled: yes
+      when: ansible_os_family == "RedHat"
