@@ -30,7 +30,7 @@ hpa.yaml                    # horizontal autoscaller
 
 ### Hello Service
 
-* Resolves allo-app pods via DNS for Nginx upstream
+* Resolves all hello-app pods via DNS for Nginx upstream
 
 ### Horizontal Pod Autoscaler (HPA)
 
