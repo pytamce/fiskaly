@@ -18,12 +18,13 @@ A simple, startup infrastructure configuration as a code for a cloud of choice l
 
 ```
 README.md
-providers.tf    # Provider configuration
-variables.tf    # Input variables for customization
-outputs.tf      # Outputs like kubeconfig
-network.tf      # VPC, subnets, route tables, IGW
-security.tf     # Security groups for nodes and LB      
-cluster.tf      # EKS cluster and node groups (roles/polic)
+modules/cluster/main.tf       # Main module for EKS k8s deployment
+modules/cluster/variables.tf  # Variables for EKS k8s module
+modules/cluster/outputs.tf    # Outputs from EKS k8s module
+modules/network/main.tf       # Main module for whole network configuration
+modules/network/variables.tf  # Variables for network configuration
+modules/security/main.tf      # Main module for security groups
+main.tf                       # Main ROOT module
 ```
 
 ---
