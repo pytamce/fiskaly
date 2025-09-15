@@ -5,7 +5,7 @@ metadata:
 data:
   default.conf: |
     upstream backend {
-      server hello-service:8080;
+      server hello-service:80;
     }
 
     server {

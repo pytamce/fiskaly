@@ -55,8 +55,7 @@ minikube addons enable metrics-server
 kubectl create -f .
 minikube service nginx-lb-service
 kubectl run -i --tty load-generator --image=busybox /bin/sh
-while true; do wget -q -O- http://hello-service:8080/; done
+while true; do wget -q -O- http://hello-service:80; done
 kubectl get hpa -w
-http://localhost:8080/
 ```
 
