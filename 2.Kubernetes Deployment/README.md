@@ -1,6 +1,6 @@
 # ☸️ Kubernetes Deployment — Hello World App with Nginx Load Balancer
 
-This repository demonstrates a **simple Kubernetes deployment** of a web with **Nginx as a load balancer** in front of it. 
+This repository demonstrates a **simple Kubernetes deployment** of a web application with **Nginx as a load balancer** in front of it. 
 
 
 ---
