@@ -51,7 +51,6 @@
       notify: Restart Apache
 
     # make sure that MariaDB is installed on RedHat servers only
-
     - name: Ensure MariaDB is installed on RedHat
       ansible.builtin.package:
         name: "{{ mariadb_redhat_package }}"
