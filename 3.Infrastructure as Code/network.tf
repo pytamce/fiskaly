@@ -1,3 +1,4 @@
+# create VPC
 resource "aws_vpc" "demo-eks-cluster-vpc" {
 cidr_block       = var.cidr_block
 enable_dns_hostnames = true
@@ -10,6 +11,7 @@ additional_tags = {
 }
 }
 
+# create private and public subnets
 resource "aws_subnet" "public-subnet-1" {
 vpc_id     = aws_vpc.demo-eks-cluster-vpc.id
 cidr_block = cidrsubnet(var.cidr_block, 8, 10) # 10.10.10.0/24
@@ -44,17 +46,20 @@ lifecycle {
   }
 }
 
+# create internet gateway
 resource "aws_internet_gateway" "eks-igw" {
 vpc_id = aws_vpc.demo-eks-cluster-vpc.id
 tags = var.tags
 }
 
+# create elasticIP
 resource "aws_eip" "eks-ngw-eip" {
 domain = "vpc"
 tags = var.tags
 depends_on = [aws_internet_gateway.eks-igw]
 }
 
+# create NAT gateway
 resource "aws_nat_gateway" "eks-ngw" {
 allocation_id = aws_eip.eks-ngw-eip.id
 subnet_id     = aws_subnet.public-subnet-1.id
@@ -63,6 +68,7 @@ depends_on = [aws_internet_gateway.eks-igw]
 tags = var.tags
 }
 
+# create route tables and associations
 resource "aws_route_table" "public-rt" {
 vpc_id = aws_vpc.demo-eks-cluster-vpc.id
 
@@ -83,7 +89,6 @@ route {
 tags = var.tags
 }
 
-# Associate Route Tables with Subnets
 resource "aws_route_table_association" "public-rt-assoc-1" {
 subnet_id      = aws_subnet.public-subnet-1.id
 route_table_id = aws_route_table.public-rt.id
