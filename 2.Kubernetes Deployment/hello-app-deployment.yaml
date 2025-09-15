@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: hello-app
-          image: martinhaluska/hello-8080:latest
+          image: martinhaluska/hello-app-8080:latest
           ports:
             - containerPort: 8080
           resources:
