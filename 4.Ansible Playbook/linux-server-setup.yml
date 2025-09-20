@@ -47,7 +47,7 @@
         group: www-data
         mode: '0644'
       when: ansible_os_family == "Debian" and
-            "'apache2' in ansible_facts.packages"
+        (ansible_facts.packages.apache2 is defined)
       notify: Restart Apache
 
     # make sure that MariaDB is installed on RedHat servers only
