@@ -57,6 +57,14 @@
         state: present
       when: ansible_os_family == "RedHat"
 
+    # ensure Apache service is enabled and running on Ubuntu
+    - name: Ensure Apache service is running and enabled
+      ansible.builtin.service:
+        name: "{{ apache_ubuntu_package }}"
+        state: started
+        enabled: true
+      when: ansible_os_family == "Debian"
+
   handlers:
     - name: Restart Apache
       ansible.builtin.service:
