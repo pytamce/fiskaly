@@ -28,11 +28,11 @@ inventory.ini
     - ensures the latest security and feature updates are applied and upgraded for Debian and RedHat systems
 
 ## Execution Flow
-Update and upgrade all servers.
-Gather installed package facts.
-Install Apache on Ubuntu, MariaDB on RedHat.
-If Apache is installed on Ubuntu, deploy index.html.
-Ensure Apache is enabled and running on Ubuntu.
+- Update and upgrade all servers.
+- Gather installed package facts.
+- Install Apache on Ubuntu, MariaDB on RedHat.
+- If Apache is installed on Ubuntu, deploy index.html.
+- Ensure Apache is enabled and running on Ubuntu.
 
 ## Run playbook
 ```bash
