@@ -21,11 +21,11 @@ ansible.cfg
 ---
 
 ## Design
-1. Support for Multiple OS Families - <span style="color:blue">to improve maintainability</span>
+1. Support for Multiple OS Families - to improve maintainability
     - uses ansible_os_family to distinguish between Debian and RedHat systems
     - avoids writing two separate playbooks and allows unified management
 
-2. Package Management - <span style="color:blue">to keep systems patched, which reduces security vulnerabilities and ensures software stability</span>
+2. Package Management - to keep systems patched, which reduces security vulnerabilities and ensures software stability
     - ensures the latest security and feature updates are applied and upgraded for Debian and RedHat systems
 
 ## Execution Flow
