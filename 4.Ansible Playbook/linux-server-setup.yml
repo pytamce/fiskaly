@@ -37,8 +37,8 @@
         state: present
       when: ansible_os_family == "Debian"
 
-    # if system is Ubuntu and Apache is installed, launch a simple configuration showing html document with “Hello world”
-    # once the Apache’s configuration file has been updated - Apache process should be restarted/reloaded to pick up the changes in configuration
+    # if system is Ubuntu and Apache is installed, launch a simple configuration showing html document with “Hello world"
+    # Note: there is no need to restart Apache2 service after static file was changed.
     - name: Create simple Apache HTML page (Hello world) on Ubuntu
       ansible.builtin.copy:
         dest: /var/www/html/index.html
@@ -48,7 +48,6 @@
         mode: '0644'
       when: ansible_os_family == "Debian" and
         (ansible_facts.packages.apache2 is defined)
-      notify: Restart Apache
 
     # make sure that MariaDB is installed on RedHat servers only
     - name: Ensure MariaDB is installed on RedHat
@@ -64,9 +63,3 @@
         state: started
         enabled: true
       when: ansible_os_family == "Debian"
-
-  handlers:
-    - name: Restart Apache
-      ansible.builtin.service:
-        name: "{{ apache_ubuntu_package }}"
-        state: restarted
