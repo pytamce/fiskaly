@@ -13,8 +13,9 @@ It ensures the following:
 
 ## Files
 ```
-linux-server-setup.yml
-inventory.ini
+inventory/test/hosts.yml
+playbook/linux-server-setup.yml
+ansible.cfg
 ```
 
 ---
@@ -36,6 +37,6 @@ inventory.ini
 
 ## Run playbook
 ```bash
-ansible-playbook -i inventory.ini linux-server-setup.yml
+ansible-playbook -i inventory/test/hosts.yml playbook/linux-server-setup.yml
 ```
 
