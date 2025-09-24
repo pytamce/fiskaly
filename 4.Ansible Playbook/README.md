@@ -2,7 +2,7 @@
 
 This repository contains an **Ansible playbook** called linux-server-setup.yml that is designed to manage a heterogeneous environment with both Ubuntu (Debian family) and RedHat servers.
 
-It ensures the following:
+**It ensures the following:**
 
 * Systems are updated with the latest packages.
 * Apache web server is installed, configured, and running on Ubuntu.
