@@ -4,7 +4,7 @@ variable "environment_name" {
 }
 
 variable "aws_region" {
-  type    = string
+  type = string
 }
 
 variable "cluster_name" {
