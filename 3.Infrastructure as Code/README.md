@@ -1,16 +1,14 @@
 # 🏗️ Terraform Infrastructure — AWS EKS Cluster for Hello World App
 
 This repository demonstrates a **Terraform-based infrastructure setup** for deploying a minimal Kubernetes environment suitable for the Hello World application.
-The Terraform configuration provisions:
+
+
 
 
 ---
 
-## Task
-A simple, startup infrastructure configuration as a code for a cloud of choice launching the following:
-* VPC with subnets.
-* A small, 4 nodes Kubernetes cluster that would be able to accommodate the kubernetes deployment prepared in previous exercise.
-* Provide the proper network security configuration allowing only necessary traffic to our service.
+## Design
+For a detailed description of the EKS cluster architecture including scalability, high availability, observability, and security, see [Architecture Overview](/docs/architecture.md).
 
 ---
 
@@ -23,8 +21,14 @@ modules/cluster/variables.tf  # Variables for EKS k8s module
 modules/cluster/outputs.tf    # Outputs from EKS k8s module
 modules/network/main.tf       # Main module for whole network configuration
 modules/network/variables.tf  # Variables for network configuration
+modules/network/outputs.tf    # Outputs from network module
 modules/security/main.tf      # Main module for security groups
+modules/security/outputs.tf   # Outputs from security module
+modules/security/variables.tf # Variables for security configuration
 main.tf                       # Main ROOT module
+backend.tf                    # Backend state file configuration
+providers.tf                  # List of providers used in modules
+variables.tf                  # Variables user for root module
 ```
 
 ---
