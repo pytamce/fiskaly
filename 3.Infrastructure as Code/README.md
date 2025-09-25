@@ -168,7 +168,7 @@ The cluster is configured to support self-managed and bootstrap add-ons to enhan
     - API access restrictions to a trusted CIDR range (operator IP).
     - Separate route tables per AZ for traffic isolation.
 
-![Architecture Diagram](architecture.png)
+![Architecture Diagram](eks_arch.png)
 
 
 ## Operational consideration
