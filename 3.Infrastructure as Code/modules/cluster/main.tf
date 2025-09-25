@@ -108,9 +108,9 @@ resource "aws_eks_node_group" "eks-node-group" {
   ami_type       = var.ami_type
 
   scaling_config {
-    desired_size = 4
+    desired_size = 2
     max_size     = 4
-    min_size     = 4
+    min_size     = 2
   }
   update_config {
     max_unavailable = 1
