@@ -1,9 +1,9 @@
 ## EKS Cluster Architecture
 
 This manifest describes the architecture for the Amazon EKS (Elastic Kubernetes Service) cluster deployed using this terraform module. The setup focuses on following aspects:
-- scalability 
-- high availability
-- security & observability
+- **scalability**
+- **high availability**
+- **security & observability**
 
 1. Network Architecture
 
@@ -33,6 +33,8 @@ Route Tables
 - Private route tables: One per AZ, each routing through its NAT Gateway for isolated outbound internet access.
 
 
+
+
 2. Security Architecture
 
 
@@ -47,6 +49,8 @@ Security Group for Application Load Balancer (lb):
 
 
 This separation of security groups follows the principle of least privilege while enabling required access.
+
+
 
 
 3. EKS Cluster Architecture
@@ -82,6 +86,8 @@ Dedicated IAM role with necessary policies:
 - AmazonEC2ContainerRegistryReadOnly
 
 
+
+
 4. Scalability
 
 
@@ -91,6 +97,8 @@ Worker nodes can be dynamically scaled by adjusting the node group configuration
 
 Multi-AZ Deployment:
 Distributes nodes and workloads across AZs for redundancy and balanced resource utilization.
+
+
 
 
 5. High Availability
@@ -108,6 +116,8 @@ Private Subnets for Workloads:
 Protect workloads from direct internet exposure while allowing necessary connectivity.
 
 
+
+
 6. Observability
 
 
@@ -115,6 +125,8 @@ Observability can be provided through:
 - Kubernetes native tools (e.g., Prometheus, Grafana, CloudWatch integration).
 - Cloud-native monitoring for control plane and worker node metrics.
 - Logging enabled at multiple levels for troubleshooting and performance insights.
+
+
 
 
 7. Security
