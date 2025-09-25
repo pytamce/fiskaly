@@ -23,6 +23,24 @@ requirements.txt    # pin exact version of Flask
 
 ---
 
+## Design
+1. Multi-stage build
+    - Builder stage installs dependencies into /install
+    - Runtime stage copies only what’s needed → smaller image
+
+2. Non-root user
+    - Added useradd --create-home appuser
+    - Set USER appuser before running
+
+3. Dependency handling
+    - Use of requirements.txt
+    - Make dependencies explicit and reproducible
+
+4. Optimized caching
+    - Copy requirements.txt first → dependencies are only reinstalled if requirements change
+    - Code changes won’t invalidate dependency cache
+
+
 ## Build and run
 
 1. Build the imag:
@@ -41,5 +59,5 @@ docker run --rm -p 8080:8080 --name hello-app hello-8080:latest
 
 ```bash
 curl http://localhost:8080/
-# => Hello world
+# => Hello world from pod *
 ```
