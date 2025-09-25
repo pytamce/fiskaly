@@ -30,7 +30,15 @@ pdb.yaml                    # pod distribution budget
 
 ---
 
-### Test HPA
+## Deployment
+```bash
+cd "2.Kubernetes Deployment"
+kubectl create -f .
+```
+
+---
+
+## Test HPA
 ```bash
 kubectl run -i --tty load-generator --image=busybox /bin/sh
 while true; do wget -q -O- http://hello-service:80; done
