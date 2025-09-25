@@ -30,7 +30,7 @@ pdb.yaml                    # pod distribution budget
 
 ---
 
-## Scalability / Security / Availability & Reliability aspects:
+## Scalability / Security / Availability & Reliability aspects
 - Resilient → self-healing (via probes), safe rolling updates (via PDB), load-balanced requests.
 - Scalable → auto-adjusts replicas based on CPU utilization.
 - Efficient → resource requests/limits optimize scheduling and prevent cluster resource exhaustion.
