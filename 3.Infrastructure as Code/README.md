@@ -8,7 +8,7 @@ This repository demonstrates a **Terraform-based infrastructure setup** for depl
 ---
 
 ## Design
-For a detailed description of the EKS cluster architecture including scalability, high availability, observability, and security, see [Architecture Overview](/docs/architecture.md).
+For a detailed description of the EKS cluster architecture including scalability, high availability, observability, and security, see [Architecture Overview] (docs/architecture.md)
 
 ---
 
