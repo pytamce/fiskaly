@@ -168,6 +168,8 @@ The cluster is configured to support self-managed and bootstrap add-ons to enhan
     - API access restrictions to a trusted CIDR range (operator IP).
     - Separate route tables per AZ for traffic isolation.
 
+![Architecture Diagram](architecture.png)
+
 
 ## Operational consideration
 - for default t3.medium instance is used for worker nodes. change instance type if not testing
