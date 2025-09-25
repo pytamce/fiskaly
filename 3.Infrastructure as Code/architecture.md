@@ -5,6 +5,11 @@ This manifest describes the architecture for the Amazon EKS (Elastic Kubernetes 
 - **high availability**
 - **security & observability**
 
+
+
+
+
+
 1. Network Architecture
 
 
