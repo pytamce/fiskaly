@@ -169,7 +169,13 @@ The cluster is configured to support self-managed and bootstrap add-ons to enhan
     - Separate route tables per AZ for traffic isolation.
 
 ## Operational consideration
-- for default t3.medium instance is used for worker nodes. change instance type if not testing
+- For testing purposes `t3.medium` instance type is used. Please consider to use different instance type for real workload.
 
 ## Security consideration
 - by default public access allowed to k8s API server, but limited to operator IP. if used in Production, consider to disable public access to control plane.
+
+## Deployment
+Following values needs to be passed during module execution:
+- aws_region
+- environment_name
+- cluster_name
