@@ -1,8 +1,8 @@
 ##### CONTROL PLANE #####
 
 # create role for EKS cluster and policy
-resource "aws_iam_role" "demo-eks-cluster-role" {
-  name = "demo-eks-cluster-role"
+resource "aws_iam_role" "eks-cluster-role" {
+  name = "eks-cluster-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -37,16 +37,13 @@ specifications:
 - allow access to EKS API from public only from my IP
 - managed ADDONS
  */
-resource "aws_eks_cluster" "demo-eks-cluster" {
+resource "aws_eks_cluster" "eks-cluster" {
   name     = var.cluster_name
-  role_arn = aws_iam_role.demo-eks-cluster-role.arn
+  role_arn = aws_iam_role.eks-cluster-role.arn
   vpc_config {
     endpoint_private_access = true
     endpoint_public_access  = true
-    subnet_ids = [
-      aws_subnet.private-subnet-1.id,
-      aws_subnet.private-subnet-2.id
-    ]
+    subnet_ids = var.private_subnet_ids
     public_access_cidrs = ["${chomp(data.http.my_ip.response_body)}/32"]
   }
   access_config {
@@ -66,8 +63,8 @@ resource "aws_eks_cluster" "demo-eks-cluster" {
 ##### WORKER NODES #####
 
 # create role & assign policies
-resource "aws_iam_role" "demo-eks-ng-role" {
-  name = "demo-eks-node-group-role"
+resource "aws_iam_role" "eks-ng-role" {
+  name = "eks-node-group-role"
 
   assume_role_policy = jsonencode({
     Statement = [{
@@ -81,19 +78,19 @@ resource "aws_iam_role" "demo-eks-ng-role" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "eks-demo-ng-WorkerNodePolicy" {
+resource "aws_iam_role_policy_attachment" "eks-ng-WorkerNodePolicy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.demo-eks-ng-role.name
+  role       = aws_iam_role.eks-ng-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks-demo-ng-AmazonEKS_CNI_Policy" {
+resource "aws_iam_role_policy_attachment" "eks-ng-AmazonEKS_CNI_Policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.demo-eks-ng-role.name
+  role       = aws_iam_role.eks-ng-role.name
 }
 
-resource "aws_iam_role_policy_attachment" "eks-demo-ng-ContainerRegistryReadOnly" {
+resource "aws_iam_role_policy_attachment" "eks-ng-ContainerRegistryReadOnly" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.demo-eks-ng-role.name
+  role       = aws_iam_role.eks-ng-role.name
 }
 
 # create worker node group
@@ -102,16 +99,13 @@ specifications:
 - 4 worker nodes
 - t3.medium (just host simple web applicatio
  */
-resource "aws_eks_node_group" "eks-demo-node-group" {
+resource "aws_eks_node_group" "eks-node-group" {
   cluster_name    = var.cluster_name
-  node_role_arn   = aws_iam_role.demo-eks-ng-role.arn
-  node_group_name = "demo-eks-node-group"
-  subnet_ids = [
-    aws_subnet.private-subnet-1.id,
-    aws_subnet.private-subnet-2.id
-  ]
-  instance_types = "t3.medium"
-  ami_type       = "AL2023_ARM_64_STANDARD"
+  node_role_arn   = aws_iam_role.eks-ng-role.arn
+  node_group_name = var.worker_node_group_name
+  subnet_ids = var.private_subnet_ids
+  instance_types = var.instance_type
+  ami_type       = var.ami_type
 
   scaling_config {
     desired_size = 4
@@ -123,8 +117,8 @@ resource "aws_eks_node_group" "eks-demo-node-group" {
   }
 
   depends_on = [
-    aws_iam_role_policy_attachment.eks-demo-ng-WorkerNodePolicy,
-    aws_iam_role_policy_attachment.eks-demo-ng-AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.eks-demo-ng-ContainerRegistryReadOnly,
+    aws_iam_role_policy_attachment.eks-ng-WorkerNodePolicy,
+    aws_iam_role_policy_attachment.eks-ng-AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.eks-ng-ContainerRegistryReadOnly,
   ]
 }

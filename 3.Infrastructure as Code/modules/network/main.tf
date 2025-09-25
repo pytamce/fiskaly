@@ -1,110 +1,115 @@
-# create VPC
-resource "aws_vpc" "demo-eks-cluster-vpc" {
+# VPC
+resource "aws_vpc" "eks-cluster-vpc" {
   cidr_block           = var.cidr_block
   enable_dns_hostnames = true
+  enable_dns_support   = true
   tags                 = var.tags
 }
 
+# This tag is needed to join worker nodes to the control plane
 locals {
   additional_tags = {
     "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
 
-# create private and public subnets
-resource "aws_subnet" "public-subnet-1" {
-  vpc_id            = aws_vpc.demo-eks-cluster-vpc.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, 10) # 10.10.10.0/24
-  availability_zone = var.availability_zones[0]
-  tags              = var.tags
+# Fetch all available AZs
+data "aws_availability_zones" "available" {
+  state = "available"
 }
 
-resource "aws_subnet" "public-subnet-2" {
-  vpc_id            = aws_vpc.demo-eks-cluster-vpc.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, 20) # 10.10.20.0/24
-  availability_zone = var.availability_zones[1]
-  tags              = var.tags
+# Select AZs to use. Limit deployment only to 2 AZs. This value can be changed by "az_count"
+locals {
+  selected_azs = length(var.availability_zones) > 0 ? var.availability_zones : slice(data.aws_availability_zones.available.names, 0, var.az_count)
 }
 
-resource "aws_subnet" "private-subnet-1" {
-  vpc_id            = aws_vpc.demo-eks-cluster-vpc.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, 110) # 10.10.110.0/24
-  availability_zone = var.availability_zones[0]
-  tags              = merge(var.tags, local.additional_tags)
-  lifecycle {
-    ignore_changes = [tags, tags_all]
-  }
+# Public subnets
+resource "aws_subnet" "public-subnet" {
+  for_each = toset(local.selected_azs)
+
+  vpc_id                  = aws_vpc.eks-cluster-vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.eks-cluster-vpc.cidr_block, 8, index(local.selected_azs, each.key))
+  availability_zone       = each.key
+  map_public_ip_on_launch = true
+
+  tags = merge(var.tags, { Name = "public-subnet-${each.key}" })
 }
 
-resource "aws_subnet" "private-subnet-2" {
-  vpc_id            = aws_vpc.demo-eks-cluster-vpc.id
-  cidr_block        = cidrsubnet(var.cidr_block, 8, 120)
-  availability_zone = var.availability_zones[1]
-  tags              = merge(var.tags, local.additional_tags)
-  lifecycle {
-    ignore_changes = [tags, tags_all]
-  }
+# Private subnets
+resource "aws_subnet" "private-subnet" {
+  for_each = toset(local.selected_azs)
+
+  vpc_id                  = aws_vpc.eks-cluster-vpc.id
+  cidr_block              = cidrsubnet(aws_vpc.eks-cluster-vpc.cidr_block, 8, index(local.selected_azs, each.key) + 10)
+  availability_zone       = each.key
+  map_public_ip_on_launch = false
+
+  tags = merge(var.tags, { Name = "private-subnet-${each.key}" })
 }
 
-# create internet gateway
+# Internet Gateway
 resource "aws_internet_gateway" "eks-igw" {
-  vpc_id = aws_vpc.demo-eks-cluster-vpc.id
-  tags   = var.tags
+  vpc_id = aws_vpc.eks-cluster-vpc.id
+  tags   = merge(var.tags, { Name = "eks-igw" })
 }
 
-# create elasticIP
-resource "aws_eip" "eks-ngw-eip" {
-  domain     = "vpc"
-  tags       = var.tags
-  depends_on = [aws_internet_gateway.eks-igw]
+# Elastic IPs for NAT gateways
+resource "aws_eip" "nat" {
+  for_each = aws_subnet.public-subnet
+  domain   = "vpc"
+
+  tags = merge(var.tags, { Name = "nat-eip-${each.key}" })
 }
 
-# create NAT gateway
+# NAT Gateways (one per public subnet/AZ)
 resource "aws_nat_gateway" "eks-ngw" {
-  allocation_id = aws_eip.eks-ngw-eip.id
-  subnet_id     = aws_subnet.public-subnet-1.id
+  for_each      = aws_subnet.public-subnet
+  allocation_id = aws_eip.nat[each.key].id
+  subnet_id     = each.value.id
+
+  tags = merge(var.tags, { Name = "nat-gateway-${each.key}" })
 
   depends_on = [aws_internet_gateway.eks-igw]
-  tags       = var.tags
 }
 
-# create route tables and associations
+# Public route table
 resource "aws_route_table" "public-rt" {
-  vpc_id = aws_vpc.demo-eks-cluster-vpc.id
+  vpc_id = aws_vpc.eks-cluster-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.eks-igw.id
   }
-  tags = var.tags
+
+  tags = merge(var.tags, { Name = "public-rt" })
 }
 
+# Private route tables (one per AZ)
 resource "aws_route_table" "private-rt" {
-  vpc_id = aws_vpc.demo-eks-cluster-vpc.id
+  for_each = aws_subnet.private-subnet
+
+  vpc_id = aws_vpc.eks-cluster-vpc.id
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.eks-ngw.id
+    nat_gateway_id = aws_nat_gateway.eks-ngw[each.key].id
   }
-  tags = var.tags
+
+  tags = merge(var.tags, { Name = "private-rt-${each.key}" })
 }
 
-resource "aws_route_table_association" "public-rt-assoc-1" {
-  subnet_id      = aws_subnet.public-subnet-1.id
+# Public route table associations
+resource "aws_route_table_association" "public-rt-assoc" {
+  for_each = aws_subnet.public-subnet
+
+  subnet_id      = each.value.id
   route_table_id = aws_route_table.public-rt.id
 }
 
-resource "aws_route_table_association" "public-rt-assoc-2" {
-  subnet_id      = aws_subnet.public-subnet-2.id
-  route_table_id = aws_route_table.public-rt.id
-}
+# Private route table associations
+resource "aws_route_table_association" "private-rt-assoc" {
+  for_each = aws_subnet.private-subnet
 
-resource "aws_route_table_association" "private-rt-assoc-1" {
-  subnet_id      = aws_subnet.private-subnet-1.id
-  route_table_id = aws_route_table.private-rt.id
-}
-
-resource "aws_route_table_association" "private-rt-assoc-2" {
-  subnet_id      = aws_subnet.private-subnet-2.id
-  route_table_id = aws_route_table.private-rt.id
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.private-rt[each.key].id
 }
