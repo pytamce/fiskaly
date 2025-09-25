@@ -169,6 +169,7 @@ The cluster is configured to support self-managed and bootstrap add-ons to enhan
     - Separate route tables per AZ for traffic isolation.
 
 ![Architecture Diagram](eks_arch.png)
+![Image](https://raw.githubusercontent.com/pytamce/3.Infrastructure%20as%20Code/main/eks_arch.png)
 
 
 ## Operational consideration
