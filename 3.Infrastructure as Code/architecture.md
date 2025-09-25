@@ -6,11 +6,7 @@ This manifest describes the architecture for the Amazon EKS (Elastic Kubernetes 
 - **security & observability**
 
 
-
-
-
-
-1. Network Architecture
+1. Network Architecture<br>
 
 
 VPC
