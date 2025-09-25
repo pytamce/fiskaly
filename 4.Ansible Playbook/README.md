@@ -35,6 +35,12 @@ ansible.cfg
 - If Apache is installed on Ubuntu, deploy index.html.
 - Ensure Apache is enabled and running on Ubuntu.
 
+## Security consideration
+- Do not use same private key everywhere. It creates a single point of compromise.
+- Store private key securely (e.g. in Vault, Ansible Vault, AWS Secrets Manager)
+- Use ansible user with sudo restricted to specific commands, not full root
+- Rotate key periodically
+
 ## Run playbook
 ```bash
 ansible-playbook -i inventory/test/hosts.yml playbook/linux-server-setup.yml
