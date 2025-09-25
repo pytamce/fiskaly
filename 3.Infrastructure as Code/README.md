@@ -42,3 +42,9 @@ variables.tf                  # Variables user for root module
 * **Node Group:** 4 nodes, `t3.medium`
 * **Subnets:** Private
 * **Security:** Worker nodes SG, managed policies for control plane communication
+
+## Operational consideration
+- for default t3.medium instance is used for worker nodes. change instance type if not testing
+
+## Security consideration
+- by default public access allowed to k8s API server, but limited to operator IP. if used in Production, consider to disable public access to control plane.
